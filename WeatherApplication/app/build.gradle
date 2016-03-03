@@ -1,24 +1,22 @@
-apply plugin: 'com.android.model.application'
+apply plugin: 'com.android.application'
 
-model{
-    android {
-        compileSdkVersion = 23
-        buildToolsVersion = "23.0.2"
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
 
-        defaultConfig.with {
-            applicationId = "shanedharan.me.weatherapplication"
-            minSdkVersion.apiLevel = 21
-            targetSdkVersion.apiLevel = 23
-            versionCode = 1
-            versionName = "1.0"
+    defaultConfig {
+        applicationId "shanedharan.me.weatherapplication"
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-        android.buildTypes {
-            release {
-                minifyEnabled=false
-                proguardFiles.add(file('proguard-android.txt'))
-            }
-        }
 }
 
 dependencies {
