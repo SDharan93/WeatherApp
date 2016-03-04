@@ -8,7 +8,9 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
@@ -22,16 +24,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private String[] days;
     private ListAdapter dayAdapter;
     private ListView weatherList;
+    private ToggleButton toggle;
 
-    private native String stub();
-    static {
-    try {
-        System.loadLibrary("tempConv");
-    } catch (UnsatisfiedLinkError e) {
-        Log.d(DEBUG, "Native code library failed to load " + e);
-        System.exit(1);
-    }
-}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +35,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         tempValues = new float[6];
         serverTemp = new Temperature();
-        days = new String[]{stub(), "Tuesday", "Wednesday", "Thursday", "Friday"};
+        days = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
         values = new ListType[5];
-
+        toggle = (ToggleButton) findViewById(R.id.toggleButton);
         setup();
     }
 
@@ -81,6 +75,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             setTitle("No Temperature Sensor Available");
         }
         Log.d(DEBUG, "Sensor complete");
+
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //If Celsius convert to Fahrenheit
+                if(isChecked) {
+                    ListType day = values[0];
+
+                    float temp = day.getTemp();
+                    temp = TempCalc.ConvertToFahrenheit(temp);
+                    day.setTemp(temp);
+
+                    values[0] = day;
+                    dayAdapter.notifyDataSetChanged();
+                } else { //If Fahrenheit convert to Celsius
+                    ListType day = values[0];
+
+                    float temp = day.getTemp();
+                    temp = TempCalc.ConvertToCelsius(temp);
+                    day.setTemp(temp);
+
+                    values[0] = day;
+                    dayAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
