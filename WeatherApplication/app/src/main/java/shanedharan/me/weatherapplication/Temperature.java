@@ -11,7 +11,8 @@ import java.util.Random;
 public class Temperature {
 
     //Canada's temperature sucks
-    private static final float MIN_TEMP = -14f;
+    private static final int MIN_TEMP = -14;
+    private static final int MAX_TEMP = 9;
 
     private Random tempValue;
 
@@ -20,6 +21,7 @@ public class Temperature {
     }
 
     public float getValue() {
-        return tempValue.nextFloat() + MIN_TEMP;
+        float realTemp = tempValue.nextInt(MAX_TEMP - MIN_TEMP) + MIN_TEMP / 1f;
+        return realTemp;
     }
 }

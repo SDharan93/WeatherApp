@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 /**
  * Created by shane on 03/03/16.
  */
@@ -25,8 +28,13 @@ public class ListAdapter extends ArrayAdapter{
         TextView day = (TextView) customView.findViewById(R.id.Day);
         TextView temp = (TextView) customView.findViewById(R.id.Temp);
 
+        //Rounding the temperature value
+        DecimalFormat df = new DecimalFormat("#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        float num = selectDay.getTemp();
+
         day.setText(selectDay.getDate());
-        temp.setText("Temperature: " + selectDay.getTemp() + "\u2103");
+        temp.setText("Temperature: " + df.format(num) + selectDay.getUnit());
 
         return customView;
     }

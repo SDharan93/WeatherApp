@@ -9,10 +9,12 @@ public class ListType {
 
     private String Date;
     private float temp;
+    private char unit;
 
     public ListType() {
         this.Date = "Monday";
         this.temp = 0;
+        this.unit = '\u2103';
     }
 
     public float getTemp() {
@@ -29,5 +31,13 @@ public class ListType {
 
     public void setDate(String date) {
         this.Date = date;
+    }
+
+    public void setUnit(char unit) {
+        this.unit = unit;
+    }
+
+    public char getUnit() {
+        return this.unit;
     }
 }

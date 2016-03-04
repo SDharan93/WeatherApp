@@ -15,6 +15,8 @@ import android.widget.ToggleButton;
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private static final String DEBUG = "DEBUG";
+    private static final char CELSIUS = '\u2103';
+    private static final char FAHRENHEIT = '\u2109';
 
     private float[] tempValues;
     private SensorManager tempManager;
@@ -51,15 +53,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Get values from "Server"
         for(int i = 1; i < 6; i++) {
             tempValues[i] = serverTemp.getValue();
-            Log.d(DEBUG, "The values for server are: " + i + " and equals " + tempValues[i]);
         }
 
+        //Sets up the day and temperature per value
         for (int i = 0; i < 5; i++) {
             ListType temp = new ListType();
             temp.setTemp(tempValues[i + 1]);
             temp.setDate(days[i]);
+            //Will default at Celsius
+            temp.setUnit(CELSIUS);
             values[i] = temp;
-            Log.d(DEBUG, "The values for days are: " + days[i] + " and equals " + tempValues[i + 1]);
         }
 
         dayAdapter = new ListAdapter(this, values);
@@ -87,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         float temp = day.getTemp();
                         temp = TempCalc.ConvertToFahrenheit(temp);
                         day.setTemp(temp);
+                        day.setUnit(FAHRENHEIT);
                         values[i] = day;
                     }
                     dayAdapter.notifyDataSetChanged();
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         float temp = day.getTemp();
                         temp = TempCalc.ConvertToCelsius(temp);
                         day.setTemp(temp);
+                        day.setUnit(CELSIUS);
                         values[i] = day;
                     }
                     dayAdapter.notifyDataSetChanged();
