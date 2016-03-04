@@ -38,14 +38,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         days = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
         values = new ListType[5];
         toggle = (ToggleButton) findViewById(R.id.toggleButton);
+
+        //Sets up the array of values for Monday to Friday and Listeners.
         setup();
     }
 
+    //Initializes the more crucial parts of the program.
     public void setup() {
         //0th position is made for ambient temp.
         tempValues[0] = 0;
 
-        //Get values from "Server
+        //Get values from "Server"
         for(int i = 1; i < 6; i++) {
             tempValues[i] = serverTemp.getValue();
             Log.d(DEBUG, "The values for server are: " + i + " and equals " + tempValues[i]);
@@ -63,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         weatherList = (ListView) findViewById(R.id.listView);
         weatherList.setAdapter(dayAdapter);
 
-        Log.d(DEBUG, "Setting adapter worked");
-
         //Get instance of the sensor service
         tempManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if(tempManager.getSensorList(Sensor.TYPE_AMBIENT_TEMPERATURE).size() != 0) {
@@ -74,29 +75,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //no temperature sensor available
             setTitle("No Temperature Sensor Available");
         }
-        Log.d(DEBUG, "Sensor complete");
 
+        //Listener for the toggle button, does calculation depending on the unit of measurement
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //If Celsius convert to Fahrenheit
                 if(isChecked) {
-                    ListType day = values[0];
-
-                    float temp = day.getTemp();
-                    temp = TempCalc.ConvertToFahrenheit(temp);
-                    day.setTemp(temp);
-
-                    values[0] = day;
+                    for(int i=0; i<5; i++) {
+                        ListType day = values[i];
+                        float temp = day.getTemp();
+                        temp = TempCalc.ConvertToFahrenheit(temp);
+                        day.setTemp(temp);
+                        values[i] = day;
+                    }
                     dayAdapter.notifyDataSetChanged();
                 } else { //If Fahrenheit convert to Celsius
-                    ListType day = values[0];
-
-                    float temp = day.getTemp();
-                    temp = TempCalc.ConvertToCelsius(temp);
-                    day.setTemp(temp);
-
-                    values[0] = day;
+                    for(int i=0; i<5; i++) {
+                        ListType day = values[i];
+                        float temp = day.getTemp();
+                        temp = TempCalc.ConvertToCelsius(temp);
+                        day.setTemp(temp);
+                        values[i] = day;
+                    }
                     dayAdapter.notifyDataSetChanged();
                 }
             }
