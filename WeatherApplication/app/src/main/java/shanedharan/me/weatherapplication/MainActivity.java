@@ -7,14 +7,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ToggleButton;
-
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
@@ -36,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Initalize the title to show ambient temp.
+        //Initalize the title, will be used for ambient temperature.
         setTitle("Qualcomm Coding Challenge ");
 
         tempValues = new float[6];
@@ -103,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         float convert = TempCalc.ConvertToFahrenheit(tempValues[0]);
                         setTitle("Ambient Temperature: " + df.format(convert) + FAHRENHEIT);
                     }
+                    //updates all list values
                     dayAdapter.notifyDataSetChanged();
 
                 } else { //If Fahrenheit convert to Celsius

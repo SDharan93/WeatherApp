@@ -21,6 +21,7 @@ public class Temperature {
     }
 
     public float getValue() {
+        //dividing my 1f forces a floating point variable
         float realTemp = tempValue.nextInt(MAX_TEMP - MIN_TEMP) + MIN_TEMP / 1f;
         return realTemp;
     }

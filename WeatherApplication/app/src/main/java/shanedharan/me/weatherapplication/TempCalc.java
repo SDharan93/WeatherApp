@@ -4,6 +4,8 @@ import android.util.Log;
 
 /**
  * Created by shane on 03/03/16.
+ *
+ * A class made for calculating the new unit of temperature using the native C functions
  */
 public class TempCalc {
 
