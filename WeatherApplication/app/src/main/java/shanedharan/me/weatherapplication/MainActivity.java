@@ -8,7 +8,6 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
@@ -24,6 +23,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private ListAdapter dayAdapter;
     private ListView weatherList;
 
+    private native String stub();
+    static {
+    try {
+        System.loadLibrary("tempConv");
+    } catch (UnsatisfiedLinkError e) {
+        Log.d(DEBUG, "Native code library failed to load " + e);
+        System.exit(1);
+    }
+}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         tempValues = new float[6];
         serverTemp = new Temperature();
-        days = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+        days = new String[]{stub(), "Tuesday", "Wednesday", "Thursday", "Friday"};
         values = new ListType[5];
 
         setup();
@@ -87,11 +95,4 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-    /*
-    public native String ConvCel();
-    static
-    {
-        System.loadLibrary("Native");
-    }
-    */
 }
