@@ -12,6 +12,10 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.ToggleButton;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private static final String DEBUG = "DEBUG";
@@ -48,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //Initializes the more crucial parts of the program.
     public void setup() {
         //0th position is made for ambient temp.
-        tempValues[0] = 0;
+        tempValues[0] = 1000; //Given a value it should never reach
 
         //Get values from "Server"
         for(int i = 1; i < 6; i++) {
@@ -83,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                DecimalFormat df = new DecimalFormat("#");
+                df.setRoundingMode(RoundingMode.CEILING);
                 //If Celsius convert to Fahrenheit
                 if(isChecked) {
                     for(int i=0; i<5; i++) {
@@ -93,7 +99,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         day.setUnit(FAHRENHEIT);
                         values[i] = day;
                     }
+                    if(tempValues[0] < 200) {
+                        float convert = TempCalc.ConvertToFahrenheit(tempValues[0]);
+                        setTitle("Ambient Temperature: " + df.format(convert) + FAHRENHEIT);
+                    }
                     dayAdapter.notifyDataSetChanged();
+
                 } else { //If Fahrenheit convert to Celsius
                     for(int i=0; i<5; i++) {
                         ListType day = values[i];
@@ -102,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         day.setTemp(temp);
                         day.setUnit(CELSIUS);
                         values[i] = day;
+                    }
+                    if(tempValues[0] < 200) {
+                        setTitle("Ambient Temperature: " + df.format(tempValues[0]) + CELSIUS);
                     }
                     dayAdapter.notifyDataSetChanged();
                 }
@@ -112,9 +126,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event) {
         //if value changes, change the title...
-        float temp = event.values[0];
-        tempValues[0] = temp;
-        setTitle("Current Temperature: " + temp);
+        tempValues[0] = event.values[0];
+
+        //grab the value of Monday, all days should go by same unit convention
+        ListType holder = values[0];
+        DecimalFormat df = new DecimalFormat("#");
+        df.setRoundingMode(RoundingMode.CEILING);
+
+        //If Celsius no calculations are needed.
+        if(holder.getUnit() == CELSIUS) {
+            setTitle("Ambient Temperature: " + df.format(tempValues[0]) + holder.getUnit());
+        } else {
+            //Need to convert to Fahreinhgit
+            float convert = TempCalc.ConvertToFahrenheit(tempValues[0]);
+            setTitle("Ambient Temperature: " + df.format(convert) + holder.getUnit());
+        }
     }
 
     @Override
